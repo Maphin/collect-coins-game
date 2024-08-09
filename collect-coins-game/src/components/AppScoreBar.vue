@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import { usePlayersPointsStore } from '../stores/playersPoints.ts';
+    import { usePlayersPointsStore } from '../stores/playersPoints';
 
     const playersPointsStore = usePlayersPointsStore();
 </script>

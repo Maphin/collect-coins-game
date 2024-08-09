@@ -9,8 +9,8 @@ import Aura from '@primevue/themes/aura';
 import Button from 'primevue/button';
 import Toolbar from 'primevue/toolbar';
 import Avatar from 'primevue/avatar';
-import FloatLabel from 'primevue/floatlabel';
 import Select from 'primevue/select';
+import Message from 'primevue/message';
 
 import App from './App.vue'
 import router from './router'
@@ -21,7 +21,7 @@ use(router).
 use(PrimeVue, {theme: {preset: Aura}})
 .component('Toolbar', Toolbar)
 .component('Select', Select)
-.component('FloatLabel', FloatLabel)
 .component('Avatar', Avatar)
 .component('Button', Button)
+.component('Message', Message)
 .mount('#app');

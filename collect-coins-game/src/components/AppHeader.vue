@@ -1,30 +1,22 @@
 <template>
     <div class="flex align-items-center justify-content-evenly">
-        <div class="card flex align-items-center justify-content-center">
-        <FloatLabel class="w-9rem md:w-56">
+        <div class="card w-9rem md:w-56">
             <label for="dd-points" class="block w-full">Grid size</label>
             <Select v-model="selectedSize" inputId="dd-points" :options="sizes" optionLabel="size" class="w-full" />
-        </FloatLabel>
-    </div>
-        <div class="card flex align-items-center justify-content-center">
-        <FloatLabel class="w-9rem md:w-56">
+        </div>
+        <div class="card w-9rem md:w-56">
             <label for="dd-points" class="block w-full">Select points to win</label>
             <Select v-model="selectedPointsToWin" inputId="dd-points" :options="pointsToWin" optionLabel="number" class="w-full" />
-        </FloatLabel>
-    </div>
-    <div class="card flex align-items-center justify-content-center">
-        <FloatLabel class="w-9rem md:w-56">
+        </div>
+        <div class="card w-9rem md:w-56">
             <label for="dd-points" class="block w-full">Select points to loose</label>
             <Select v-model="selectedPointsToLose" inputId="dd-points" :options="pointsToLose" optionLabel="number" class="w-full" />
-        </FloatLabel>
-    </div>
+        </div>
     </div>
 </template>
 
 <script setup>
     import { ref } from "vue";
-    import Select from 'primevue/select';
-
 
     const selectedPointsToWin = ref();
     const selectedPointsToLose = ref();

@@ -1,6 +1,7 @@
 import './assets/main.css'
 import 'primeicons/primeicons.css'
-import '/node_modules/primeflex/primeflex.css';
+import '/node_modules/primeflex/primeflex.css'
+
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia'
@@ -11,17 +12,22 @@ import Toolbar from 'primevue/toolbar';
 import Avatar from 'primevue/avatar';
 import Select from 'primevue/select';
 import Message from 'primevue/message';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 import App from './App.vue'
 import router from './router'
 
 const app = createApp(App);
-app.use(createPinia()).
-use(router).
-use(PrimeVue, {theme: {preset: Aura}})
+app
+.use(createPinia())
+.use(router)
+.use(PrimeVue, {theme: {preset: Aura, options: {prefix: 'p', darkModeSelector: 'system', cssLayer: false}}})
 .component('Toolbar', Toolbar)
 .component('Select', Select)
 .component('Avatar', Avatar)
 .component('Button', Button)
 .component('Message', Message)
+.component('DataTable', DataTable)
+.component('Column', Column)
 .mount('#app');

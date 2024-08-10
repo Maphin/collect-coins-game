@@ -5,12 +5,12 @@ interface ISelectedGridSize {
     columnsCount: number
 }
 
-interface IGridSizes extends ISelectedGridSize {
+export interface IGridSizes extends ISelectedGridSize {
     size: 'string'
     code: 'string'
 }
 
-interface IPoints {
+export interface IPoints {
     number: number
     code: string
 }

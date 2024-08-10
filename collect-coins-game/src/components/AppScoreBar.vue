@@ -3,14 +3,14 @@
         <div class="flex align-items-center gap-2">
             <label for="player1">Player 1</label>
             <Avatar class="p-overlay-badge" image="https://img.icons8.com/?size=100&id=54270&format=png&color=000000" size="xlarge" />
-            <div>{{ playersPointsStore.getFirstPlayerPoints }}</div>
-            <button @click="playersPointsStore.incrementFirstPlayerPoints">+</button>
+            <div>{{ playersStore.getFirstPlayerPoints }}</div>
+            <button @click="playersStore.incrementFirstPlayerPoints">+</button>
         </div>
         <div class="flex align-items-center gap-2">
             <label for="player2">Player 2</label>
             <Avatar class="p-overlay-badge" image="https://img.icons8.com/?size=100&id=rLMvblwPB6NZ&format=png&color=000000" size="xlarge" />
-            <div>{{ playersPointsStore.getSecondPlayerPoints }}</div>
-            <button @click="playersPointsStore.incrementSecondPlayerPoints">+</button>
+            <div>{{ playersStore.getSecondPlayerPoints }}</div>
+            <button @click="playersStore.incrementSecondPlayerPoints">+</button>
         </div>
         <div class="flex align-items-center gap-2">
             <label for="coin">Coin</label>
@@ -26,7 +26,8 @@
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import { usePlayersPointsStore } from '../stores/playersPoints';
+    import { usePlayersStore } from '../stores/players';
 
-    const playersPointsStore = usePlayersPointsStore();
+    const playersStore = usePlayersStore();
 </script>
+../stores/players

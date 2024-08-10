@@ -10,7 +10,7 @@
         />
         <AppScoreBar />
         <Message class="message" closable>Control is done with "arrows for player 1" and "WASD for player 2"</Message>
-        <AppGrid :gridSize="selectedGridSize"/>
+        <AppGrid :gridSize="selectedGridSize" :coordinates="playersStore.coordinates"/>
     </div>
 </template>
 
@@ -20,9 +20,11 @@
     import AppScoreBar from '../components/AppScoreBar.vue';
     import AppGrid from '../components/AppGrid.vue';
     import { useGameSettingsStore } from '../stores/gameSettings';
+    import { usePlayersStore } from '@/stores/players';
     import type { IGridSizes, IPoints } from '@/stores/gameSettings';
 
     const gameSettingsStore = useGameSettingsStore();
+    const playersStore = usePlayersStore();
 
     const selectedGridSize = ref(gameSettingsStore.gridSizes[0]);
     const selectedPointsToWin = ref(gameSettingsStore.pointsToWin[0]);
@@ -44,4 +46,4 @@
         width: 50%;
         margin: 0 auto;
     }
-</style>
+</style>@/stores/players

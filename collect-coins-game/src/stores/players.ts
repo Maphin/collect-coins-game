@@ -59,6 +59,10 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
         resetPoints() {
             this.points.firstPlayer = 0;
             this.points.secondPlayer = 0;
+        },
+        updateCoordinates(entity : 'firstPlayer' | 'secondPlayer' | 'coin', newX : number, newY : number) {
+            this.coordinates[entity].x = newX;
+            this.coordinates[entity].y = newY;
         }
     }
 })

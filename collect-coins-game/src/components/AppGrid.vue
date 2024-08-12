@@ -20,6 +20,8 @@
     import { ref } from 'vue';
     import { type IGridSizes } from '../stores/gameSettings'
     import { usePlayersStore } from '@/stores/players';
+    import { onMounted } from 'vue';
+    import { onBeforeUnmount } from 'vue';
 
     const props = defineProps<{
         gridSize: IGridSizes;
@@ -32,6 +34,24 @@
         const entityCoordinates = playersStore.getPlayerCoordinates(entity);
         return entityCoordinates.y === row && entityCoordinates.x === col;
     }
+
+    const changeCoinPosition  = () => {
+        const newX = Math.floor(Math.random() * props.gridSize.columnsCount);
+        const newY = Math.floor(Math.random() * props.gridSize.rowsCount);
+        playersStore.updateCoordinates('coin', newX, newY);
+    }
+
+    let intervalId: number | null = null;
+
+    onMounted(() => {
+        intervalId = window.setInterval(changeCoinPosition, 2000)
+    })
+
+    onBeforeUnmount(() => {
+        if (intervalId !== null) {
+            clearInterval(intervalId);
+        }
+    })
     
 </script>
 

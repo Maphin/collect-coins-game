@@ -3,19 +3,20 @@
         <div class="flex align-items-center gap-2">
             <label for="player1">Player 1</label>
             <Avatar class="p-overlay-badge" image="https://img.icons8.com/?size=100&id=54270&format=png&color=000000" size="xlarge" />
-            <div>{{ playersStore.getFirstPlayerPoints }}</div>
-            <button @click="playersStore.incrementFirstPlayerPoints">+</button>
+            <div>{{ playersStore.getPlayerPoints('firstPlayer') }}</div>
+            <button @click="playersStore.incrementPoints('firstPlayer')">+</button>
         </div>
         <div class="flex align-items-center gap-2">
             <label for="player2">Player 2</label>
             <Avatar class="p-overlay-badge" image="https://img.icons8.com/?size=100&id=rLMvblwPB6NZ&format=png&color=000000" size="xlarge" />
-            <div>{{ playersStore.getSecondPlayerPoints }}</div>
-            <button @click="playersStore.incrementSecondPlayerPoints">+</button>
+            <div>{{ playersStore.getPlayerPoints('secondPlayer') }}</div>
+            <button @click="playersStore.incrementPoints('secondPlayer')">+</button>
         </div>
         <div class="flex align-items-center gap-2">
             <label for="coin">Coin</label>
             <Avatar class="p-overlay-badge" image="https://img.icons8.com/?size=100&id=OFHwDWASQWmX&format=png&color=000000" size="xlarge" />
-            <div>Here points will be</div>
+            <div>{{ playersStore.getPlayerPoints('coin') }}</div>
+            <button @click="playersStore.incrementPoints('coin')">+</button>
         </div>
         <div class="flex align-items-center gap-2">
             <label for="time">Time</label>

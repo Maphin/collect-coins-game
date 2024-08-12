@@ -14,6 +14,7 @@ export interface IPlayerCoordinates {
 export interface Coordinates {
     firstPlayer: IPlayerCoordinates
     secondPlayer: IPlayerCoordinates
+    coin: IPlayerCoordinates
 }
 
 export interface IPlayersState {
@@ -25,7 +26,8 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
     state: (): IPlayersState => ({
         points: {
             firstPlayer: 1,
-            secondPlayer: 10
+            secondPlayer: 10,
+            coin: 0
         },
         coordinates: {
             firstPlayer: {
@@ -35,23 +37,24 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
             secondPlayer: {
                 x: 2,
                 y: 2
+            },
+            coin : {
+                x: 1, 
+                y: 1
             }
         }
     }),
     getters: {
-        getFirstPlayerPoints(): number {
-            return this.points.firstPlayer;
+        getPlayerPoints: (state) => (player :  'firstPlayer' | 'secondPlayer' | 'coin') : number => {
+            return state.points[player];
         },
-        getSecondPlayerPoints(): number {
-            return this.points.secondPlayer;
-        },
+        getPlayerCoordinates: (state) => (player : 'firstPlayer' | 'secondPlayer' | 'coin') : IPlayerCoordinates => {
+            return {...state.coordinates[player]};
+        }
     },
     actions: {
-        incrementFirstPlayerPoints() {
-            this.points.firstPlayer++;
-        },
-        incrementSecondPlayerPoints() {
-            this.points.secondPlayer++;
+        incrementPoints(entity) {
+            this.points[entity]++;
         },
         resetPoints() {
             this.points.firstPlayer = 0;

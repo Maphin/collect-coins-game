@@ -36,11 +36,11 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
                 y: 0,
             },
             secondPlayer: {
-                x: 2,
-                y: 2
+                x: 3,
+                y: 3
             },
             coin : {
-                x: 3, 
+                x: 2, 
                 y: 1
             }
         }

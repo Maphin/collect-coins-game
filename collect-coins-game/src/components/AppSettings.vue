@@ -1,5 +1,5 @@
 <template>
-    <div class="flex align-items-center justify-content-evenly">
+    <div class="flex align-items-center justify-content-evenly mt-2">
         <div class="card w-9rem md:w-56">
             <label for="dd-points" class="block w-full">Grid size</label>
             <Select v-model="localSelectedGridSize" @change="emitGridSizeChange" inputId="dd-points" :options="gameSettingsStore.gridSizes" optionLabel="size" class="w-full" />

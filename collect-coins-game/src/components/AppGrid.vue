@@ -18,24 +18,29 @@
 
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { useGameSettingsStore, type IGridSizes } from '../stores/gameSettings'
+    import { useGameSettingsStore, type IGridSizes, type IPoints } from '../stores/gameSettings'
     import { usePlayersStore, type IPlayerCoordinates } from '@/stores/players';
     import { onMounted } from 'vue';
     import { onBeforeUnmount } from 'vue';
 
     const props = defineProps<{
         gridSize: IGridSizes;
+        pointsToLose: IPoints
     }>()
 
     const playersStore = usePlayersStore();
     const gameSettingsStore = useGameSettingsStore();
+    let intervalId: number | null = null;
 
     const isPlayerHere = (row : number, col : number, entity : 'firstPlayer' | 'secondPlayer' | 'coin') : boolean => {
         const entityCoordinates = playersStore.getPlayerCoordinates(entity);
         return entityCoordinates.y === col && entityCoordinates.x === row;
     }
-    const generateNewNumber = (number : number) => {
+    const generateNewNumber = (number : number) : number => {
         return Math.floor(Math.random() * (number));
+    }
+    const isGameLost = () => {
+        return playersStore.points.coin === props.pointsToLose.number;
     }
 
     const changeCoinPosition  = () => {
@@ -50,15 +55,20 @@
         } while (isNewPositionMatchWithCurrentCoinPosition || isNewPositionMatchWithCurrentPlayer1Position || isNewPositionMatchWithCurrentPlayer2Position)
         
         playersStore.updateCoordinates('coin', newPosition.x, newPosition.y);
-        playersStore.incrementPoints('coin');
     }
 
-    let intervalId: number | null = null;
-
-    // onMounted(() => {
-    //     intervalId = window.setInterval(changeCoinPosition, gameSettingsStore.coinJumpInterval)
-    // })
-
+    onMounted(() => {
+        intervalId = window.setInterval(() => {
+            changeCoinPosition();
+            playersStore.incrementPoints('coin');
+            if (isGameLost()) {
+                if (intervalId !== null) {
+                clearInterval(intervalId);
+                }
+            }
+        }, gameSettingsStore.coinJumpInterval)
+    })
+    
     onBeforeUnmount(() => {
         if (intervalId !== null) {
             clearInterval(intervalId);

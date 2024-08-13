@@ -18,34 +18,46 @@
 
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { type IGridSizes } from '../stores/gameSettings'
-    import { usePlayersStore } from '@/stores/players';
+    import { useGameSettingsStore, type IGridSizes } from '../stores/gameSettings'
+    import { usePlayersStore, type IPlayerCoordinates } from '@/stores/players';
     import { onMounted } from 'vue';
     import { onBeforeUnmount } from 'vue';
 
     const props = defineProps<{
         gridSize: IGridSizes;
-        //coordinates: Object
     }>()
 
     const playersStore = usePlayersStore();
+    const gameSettingsStore = useGameSettingsStore();
 
     const isPlayerHere = (row : number, col : number, entity : 'firstPlayer' | 'secondPlayer' | 'coin') : boolean => {
         const entityCoordinates = playersStore.getPlayerCoordinates(entity);
-        return entityCoordinates.y === row && entityCoordinates.x === col;
+        return entityCoordinates.y === col && entityCoordinates.x === row;
+    }
+    const generateNewNumber = (number : number) => {
+        return Math.floor(Math.random() * (number));
     }
 
     const changeCoinPosition  = () => {
-        const newX = Math.floor(Math.random() * props.gridSize.columnsCount);
-        const newY = Math.floor(Math.random() * props.gridSize.rowsCount);
-        playersStore.updateCoordinates('coin', newX, newY);
+        const newPosition : IPlayerCoordinates = {x: null, y: null};
+        do {
+            newPosition.x = generateNewNumber(props.gridSize.columnsCount);
+            newPosition.y = generateNewNumber(props.gridSize.rowsCount);
+            
+            var isNewPositionMatchWithCurrentCoinPosition = isPlayerHere(newPosition.x, newPosition.y, 'coin');
+            var isNewPositionMatchWithCurrentPlayer1Position = isPlayerHere(newPosition.x, newPosition.y, 'firstPlayer');
+            var isNewPositionMatchWithCurrentPlayer2Position = isPlayerHere(newPosition.x, newPosition.y, 'secondPlayer');
+        } while (isNewPositionMatchWithCurrentCoinPosition || isNewPositionMatchWithCurrentPlayer1Position || isNewPositionMatchWithCurrentPlayer2Position)
+        
+        playersStore.updateCoordinates('coin', newPosition.x, newPosition.y);
+        playersStore.incrementPoints('coin');
     }
 
     let intervalId: number | null = null;
 
-    onMounted(() => {
-        intervalId = window.setInterval(changeCoinPosition, 2000)
-    })
+    // onMounted(() => {
+    //     intervalId = window.setInterval(changeCoinPosition, gameSettingsStore.coinJumpInterval)
+    // })
 
     onBeforeUnmount(() => {
         if (intervalId !== null) {

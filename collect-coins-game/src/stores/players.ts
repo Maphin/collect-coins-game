@@ -4,11 +4,12 @@ import { ref } from 'vue';
 export interface IPlayersPoints {
     firstPlayer: number
     secondPlayer: number
+    coin: number
 }
 
 export interface IPlayerCoordinates {
-    x: number
-    y: number
+    x: number | null
+    y: number | null
 }
 
 export interface Coordinates {
@@ -39,7 +40,7 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
                 y: 2
             },
             coin : {
-                x: 1, 
+                x: 3, 
                 y: 1
             }
         }
@@ -53,7 +54,7 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
         }
     },
     actions: {
-        incrementPoints(entity) {
+        incrementPoints(entity : 'firstPlayer' | 'secondPlayer' | 'coin') {
             this.points[entity]++;
         },
         resetPoints() {

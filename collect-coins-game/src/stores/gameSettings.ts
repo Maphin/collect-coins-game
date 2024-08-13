@@ -16,29 +16,21 @@ export interface IPoints {
 }
 
 interface GameSettingsState {
-    // selectedGridSize: ISelectedGridSize
-    // selectedPointsToWin: null | IPoints
-    // selectedPointsToLose: null | IPoints
     gridSizes: IGridSizes[],
     pointsToWin: IPoints[],
     pointsToLose: IPoints[],
+    coinJumpInterval: number
 }
 
 export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState>({
     id: 'gameSettings',
     state: () => ({
-        // selectedGridSize: null,
-        // selectedPointsToWin: null,
-        // selectedPointsToLose: null,
-        // selectedGridSize:  {
-        //     rowsCount: 4,
-        //     columnsCount: 4,
-        // },
         gridSizes: [
             { size: '4x4', rowsCount: 4, columnsCount: 4, code: '1' },
             { size: '5x5', rowsCount: 5, columnsCount: 5, code: '2' },
             { size: '6x6', rowsCount: 6, columnsCount: 6, code: '3' },
         ] as unknown as IGridSizes[],
+        coinJumpInterval : 1000,
         pointsToWin: [
             { number: 10, code: '1' },
             { number: 20, code: '2' },
@@ -55,9 +47,6 @@ export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState
         ] as IPoints[]
     }),
     getters: {
-        // getGridSize(): ISelectedGridSize {
-        //     return {...this.selectedGridSize};
-        // },
         getPointsToWin(): IPoints[] {
             return this.pointsToWin.map(point => ({...point}));
         },
@@ -65,15 +54,4 @@ export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState
             return this.pointsToLose.map(point => ({...point}));
         }
     },
-    // actions: {
-    //     setSelectedGridSize(gridSize: IGridSize) {
-    //         this.gridSize = gridSize;
-    //     },
-    //     setSelectedPointsToWin(points: IPoints) {
-    //         this.selectedPointsToWin = points;
-    //     },
-    //     setSelectedPointsToLose(points: IPoints) {
-    //         this.selectedPointsToLose = points;
-    //     }
-    // }
 })

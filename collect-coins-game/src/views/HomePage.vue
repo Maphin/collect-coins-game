@@ -10,7 +10,7 @@
         />
         <AppScoreBar />
         <Message class="message" closable>Control is done with "arrows for player 1" and "WASD for player 2"</Message>
-        <AppGrid :gridSize="selectedGridSize" :pointsToLose="selectedPointsToLose"/>
+        <AppGrid :gridSize="selectedGridSize" :pointsToLose="selectedPointsToLose" :pointsToWin="selectedPointsToWin"/>
     </div>
 </template>
 

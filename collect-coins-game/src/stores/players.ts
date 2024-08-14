@@ -8,8 +8,8 @@ export interface IPlayersPoints {
 }
 
 export interface IPlayerCoordinates {
-    x: number | null
-    y: number | null
+    x: number
+    y: number
 }
 
 export interface Coordinates {
@@ -26,8 +26,8 @@ export interface IPlayersState {
 export const usePlayersStore = defineStore<'players', IPlayersState>('players', {
     state: (): IPlayersState => ({
         points: {
-            firstPlayer: 1,
-            secondPlayer: 10,
+            firstPlayer: 0,
+            secondPlayer: 0,
             coin: 0
         },
         coordinates: {

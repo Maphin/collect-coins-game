@@ -26,26 +26,48 @@
 
     const props = defineProps<{
         gridSize: IGridSizes;
-        pointsToLose: IPoints
+        pointsToLose: IPoints;
+        pointsToWin: IPoints;
     }>()
 
     const playersStore = usePlayersStore();
     const gameSettingsStore = useGameSettingsStore();
     let intervalId: number | null = null;
+    let isGameStarted = false;
+    const MOVING_DIRECTIONS = {
+        UP: 'up',
+        DOWN: 'down',
+        RIGHT: 'right',
+        LEFT: 'left'
+    }
+
 
     const isPlayerHere = (row : number, col : number, entity : 'firstPlayer' | 'secondPlayer' | 'coin') : boolean => {
         const entityCoordinates = playersStore.getPlayerCoordinates(entity);
         return entityCoordinates.y === col && entityCoordinates.x === row;
     }
+    const hasPlayerCaughtCoin = (player: 'firstPlayer' | 'secondPlayer') : boolean => {
+        const playerCoordinates = playersStore.coordinates[player];
+        const coinCoordinates = playersStore.coordinates.coin;
+        return playerCoordinates.x === coinCoordinates.x && playerCoordinates.y === coinCoordinates.y;
+    }
+    const isGameLost = () : boolean => {
+        return playersStore.points.coin === props.pointsToLose.number;
+    }
+    const isGameWon = (player : 'firstPlayer' | 'secondPlayer') : boolean => {
+        return playersStore.points[player] === props.pointsToWin.number;
+    }
     const generateNewNumber = (number : number) : number => {
         return Math.floor(Math.random() * (number));
     }
-    const isGameLost = () => {
-        return playersStore.points.coin === props.pointsToLose.number;
+    const isNewPlayerPositionValid = (playerPosition : IPlayerCoordinates, player : 'firstPlayer' | 'secondPlayer') : boolean => {
+        if (playerPosition.x < 0 || playerPosition.x > props.gridSize.rowsCount - 1) return false;
+        if (playerPosition.y < 0 || playerPosition.y > props.gridSize.columnsCount - 1) return false;
+        if (isPlayerHere(playerPosition.x, playerPosition.y, player)) return false;
+        return true;
     }
-
-    const changeCoinPosition  = () => {
-        const newPosition : IPlayerCoordinates = {x: null, y: null};
+    const changeCoinPosition = () => {
+        const newPosition : IPlayerCoordinates = {...playersStore.coordinates.coin};
         do {
             newPosition.x = generateNewNumber(props.gridSize.columnsCount);
             newPosition.y = generateNewNumber(props.gridSize.rowsCount);
@@ -57,27 +79,86 @@
         
         playersStore.updateCoordinates('coin', newPosition.x, newPosition.y);
     }
+    const movePlayer = (player : 'firstPlayer' | 'secondPlayer', direction : string) => {
+        const newPosition : IPlayerCoordinates = {...playersStore.coordinates[player]};
+
+        switch (direction) {
+            case MOVING_DIRECTIONS.UP:
+                newPosition.y--;
+                break;
+            case MOVING_DIRECTIONS.DOWN:
+                newPosition.y++;
+                break;
+            case MOVING_DIRECTIONS.RIGHT:
+                newPosition.x++;
+                break;
+            case MOVING_DIRECTIONS.LEFT:
+                newPosition.x--;
+                break;
+        }
+
+        let comparedPlayer : 'firstPlayer' | 'secondPlayer' = 'firstPlayer';
+        if (player === 'firstPlayer') {
+            comparedPlayer = 'secondPlayer';
+        }
+        const isNewPositionValid : boolean = isNewPlayerPositionValid(newPosition, comparedPlayer);
+        if (!isNewPositionValid) return;
+
+        playersStore.updateCoordinates(player, newPosition.x, newPosition.y);
+        
+    }
+    const handleKeydown = (event: KeyboardEvent) => {
+        switch (event.key) {
+            case 'ArrowUp':
+                movePlayer('firstPlayer', MOVING_DIRECTIONS.UP);
+                break;
+            case 'ArrowDown':
+                movePlayer('firstPlayer', MOVING_DIRECTIONS.DOWN);
+                break;
+            case 'ArrowLeft':
+                movePlayer('firstPlayer', MOVING_DIRECTIONS.LEFT);
+                break;
+            case 'ArrowRight':
+                movePlayer('firstPlayer', MOVING_DIRECTIONS.RIGHT);
+                break;
+        }
+    }
+    const checkGameState = () => {
+        if (isGameWon('firstPlayer')) {
+            clearInterval(intervalId!);
+            router.push({ path: 'win' });
+        } else if (isGameLost()) {
+            clearInterval(intervalId!);
+            router.push({ path: 'lose' });
+        }
+    };
 
     const startGame = () => {
+        if (isGameStarted) throw new Error('The game is already started');
+
+        isGameStarted = true;
         playersStore.points.firstPlayer = 0;
         playersStore.points.secondPlayer = 0;
         playersStore.points.coin = 0;
+
         intervalId = window.setInterval(() => {
-            changeCoinPosition();
-            playersStore.incrementPoints('coin');
-            if (isGameLost()) {
-                if (intervalId !== null) {
-                    clearInterval(intervalId);
-                    router.push({path: 'lose'});
-                }
+            if (hasPlayerCaughtCoin('firstPlayer')) {
+                playersStore.incrementPoints('firstPlayer');
+            } else {
+                playersStore.incrementPoints('coin');
             }
-        }, gameSettingsStore.coinJumpInterval)
+            changeCoinPosition();
+            checkGameState();
+        }, gameSettingsStore.coinJumpInterval);
+
+        window.addEventListener('keydown', handleKeydown);
     }
-    
+
     onBeforeUnmount(() => {
         if (intervalId !== null) {
             clearInterval(intervalId);
         }
+        window.removeEventListener('keydown', handleKeydown);
     })
     
 </script>

@@ -13,6 +13,11 @@ const router = createRouter({
       name: 'lose',
       component: () => import('../views/LosePage.vue')
     },
+    {
+      path: '/win',
+      name: 'win',
+      component: () => import('../views/WinPage.vue')
+    },
   ]
 })
 

@@ -71,12 +71,7 @@
         do {
             newPosition.x = generateNewNumber(props.gridSize.columnsCount);
             newPosition.y = generateNewNumber(props.gridSize.rowsCount);
-            
-            var isNewPositionMatchWithCurrentCoinPosition = isPlayerHere(newPosition.x, newPosition.y, 'coin');
-            var isNewPositionMatchWithCurrentPlayer1Position = isPlayerHere(newPosition.x, newPosition.y, 'firstPlayer');
-            var isNewPositionMatchWithCurrentPlayer2Position = isPlayerHere(newPosition.x, newPosition.y, 'secondPlayer');
-        } while (isNewPositionMatchWithCurrentCoinPosition || isNewPositionMatchWithCurrentPlayer1Position || isNewPositionMatchWithCurrentPlayer2Position)
-        
+        } while (isPlayerHere(newPosition.x, newPosition.y, 'coin') || isPlayerHere(newPosition.x, newPosition.y, 'firstPlayer') || isPlayerHere(newPosition.x, newPosition.y, 'secondPlayer'));
         playersStore.updateCoordinates('coin', newPosition.x, newPosition.y);
     }
     const movePlayer = (player : 'firstPlayer' | 'secondPlayer', direction : string) => {
@@ -97,18 +92,22 @@
                 break;
         }
 
-        let comparedPlayer : 'firstPlayer' | 'secondPlayer' = 'firstPlayer';
+        let anotherPlayer : 'firstPlayer' | 'secondPlayer' = 'firstPlayer';
         if (player === 'firstPlayer') {
-            comparedPlayer = 'secondPlayer';
+            anotherPlayer = 'secondPlayer';
         }
-        const isNewPositionValid : boolean = isNewPlayerPositionValid(newPosition, comparedPlayer);
+        const isNewPositionValid : boolean = isNewPlayerPositionValid(newPosition, anotherPlayer);
         if (!isNewPositionValid) return;
 
         playersStore.updateCoordinates(player, newPosition.x, newPosition.y);
         
+        if (hasPlayerCaughtCoin(player)) {
+            playersStore.incrementPoints(player);
+            checkGameState();
+        }
     }
     const handleKeydown = (event: KeyboardEvent) => {
-        switch (event.key) {
+        switch (event.code) {
             case 'ArrowUp':
                 movePlayer('firstPlayer', MOVING_DIRECTIONS.UP);
                 break;
@@ -121,14 +120,28 @@
             case 'ArrowRight':
                 movePlayer('firstPlayer', MOVING_DIRECTIONS.RIGHT);
                 break;
+            case 'KeyW':
+                movePlayer('secondPlayer', MOVING_DIRECTIONS.UP);
+                break;
+            case 'KeyS':
+                movePlayer('secondPlayer', MOVING_DIRECTIONS.DOWN);
+                break;
+            case 'KeyA':
+                movePlayer('secondPlayer', MOVING_DIRECTIONS.LEFT);
+                break;
+            case 'KeyD':
+                movePlayer('secondPlayer', MOVING_DIRECTIONS.RIGHT);
+                break;
         }
-    }
+};
+
     const checkGameState = () => {
-        if (isGameWon('firstPlayer')) {
+        if (isGameWon('firstPlayer') || isGameWon('secondPlayer')) {
             clearInterval(intervalId!);
             router.push({ path: 'win' });
         } else if (isGameLost()) {
             clearInterval(intervalId!);
+            isGameStarted = false;
             router.push({ path: 'lose' });
         }
     };
@@ -142,9 +155,7 @@
         playersStore.points.coin = 0;
 
         intervalId = window.setInterval(() => {
-            if (hasPlayerCaughtCoin('firstPlayer')) {
-                playersStore.incrementPoints('firstPlayer');
-            } else {
+            if (!hasPlayerCaughtCoin('firstPlayer') && !hasPlayerCaughtCoin('secondPlayer')) {
                 playersStore.incrementPoints('coin');
             }
             changeCoinPosition();

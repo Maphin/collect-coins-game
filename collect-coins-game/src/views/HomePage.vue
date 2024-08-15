@@ -5,7 +5,7 @@
             :selectedPointsToWin="selectedPointsToWin"
             :selectedPointsToLose="selectedPointsToLose"
             @updateGridSize="updateGridSize"
-            @updatePointsToWi="updatePointsToWin"
+            @updatePointsToWin="updatePointsToWin"
             @updatePointsToLose="updatePointsToLose"
         />
         <AppScoreBar />

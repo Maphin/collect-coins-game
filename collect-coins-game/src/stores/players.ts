@@ -6,21 +6,25 @@ export interface IPlayersPoints {
     secondPlayer: number
     coin: number
 }
-
 export interface IPlayerCoordinates {
     x: number
     y: number
 }
-
-export interface Coordinates {
+export interface ICoordinates {
     firstPlayer: IPlayerCoordinates
     secondPlayer: IPlayerCoordinates
     coin: IPlayerCoordinates
 }
+export interface Imgages {
+    firstPlayer: string
+    secondPlayer: string
+    coin: string
+}
 
 export interface IPlayersState {
-    points: IPlayersPoints,
-    coordinates: Coordinates
+    points: IPlayersPoints
+    coordinates: ICoordinates
+    images: Imgages
 }
 
 export const usePlayersStore = defineStore<'players', IPlayersState>('players', {
@@ -43,6 +47,11 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
                 x: 2, 
                 y: 1
             }
+        },
+        images: {
+            firstPlayer: 'https://img.icons8.com/?size=100&id=54270&format=png&color=000000',
+            secondPlayer: 'https://img.icons8.com/?size=100&id=rLMvblwPB6NZ&format=png&color=000000',
+            coin: 'https://img.icons8.com/?size=100&id=OFHwDWASQWmX&format=png&color=000000'
         }
     }),
     getters: {

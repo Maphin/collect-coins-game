@@ -46,12 +46,4 @@ export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState
             { number: 50, code: '5' }
         ] as IPoints[]
     }),
-    getters: {
-        getPointsToWin(): IPoints[] {
-            return this.pointsToWin.map(point => ({...point}));
-        },
-        getPointsToLose() {
-            return this.pointsToLose.map(point => ({...point}));
-        }
-    },
 })

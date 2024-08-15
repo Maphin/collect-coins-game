@@ -23,6 +23,8 @@
     import { usePlayersStore, type IPlayerCoordinates } from '@/stores/players';
     import { onBeforeUnmount } from 'vue';
     import router from '@/router';
+    import coinCatchSound from '../assets/audio/chinazes.mp3';
+    import coinMissSound from '../assets/audio/sauntres.mp3';
 
     const props = defineProps<{
         gridSize: IGridSizes;
@@ -34,6 +36,8 @@
     const gameSettingsStore = useGameSettingsStore();
     let intervalId: number | null = null;
     let isGameStarted = false;
+    const coinCatchAudio = new Audio(coinCatchSound);
+    const coinMissAudio = new Audio(coinMissSound);
     const MOVING_DIRECTIONS = {
         UP: 'up',
         DOWN: 'down',
@@ -103,6 +107,8 @@
         
         if (hasPlayerCaughtCoin(player)) {
             playersStore.incrementPoints(player);
+            coinCatchAudio.currentTime = 0;
+            coinCatchAudio.play();
             checkGameState();
         }
     }
@@ -157,6 +163,8 @@
         intervalId = window.setInterval(() => {
             if (!hasPlayerCaughtCoin('firstPlayer') && !hasPlayerCaughtCoin('secondPlayer')) {
                 playersStore.incrementPoints('coin');
+                coinMissAudio.currentTime = 0;
+                coinMissAudio.play();
             }
             changeCoinPosition();
             checkGameState();

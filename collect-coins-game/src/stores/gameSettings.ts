@@ -15,11 +15,18 @@ export interface IPoints {
     code: string
 }
 
+export interface ITime {
+    minutes: number
+    seconds: number
+}
+
 interface GameSettingsState {
     gridSizes: IGridSizes[],
     pointsToWin: IPoints[],
     pointsToLose: IPoints[],
-    coinJumpInterval: number
+    coinJumpInterval: number,
+    soundOn: boolean,
+    gameDuration: ITime
 }
 
 export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState>({
@@ -44,6 +51,23 @@ export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState
             { number: 30, code: '3' },
             { number: 40, code: '4' },
             { number: 50, code: '5' }
-        ] as IPoints[]
+        ] as IPoints[],
+        soundOn: true,
+        gameDuration: {
+            minutes: 0,
+            seconds: 0
+        }
     }),
+    actions: {
+        updateGameTime(action : 'increment' | 'reset', param: 'minutes' | 'seconds') {
+            if (action === 'increment') {
+                this.gameDuration[param]++;
+            } else if (action === 'reset') {
+                this.gameDuration[param] = 0;
+            }
+        },
+        toggleSound(value : boolean) {
+            this.soundOn = value;
+        }
+    }
 })

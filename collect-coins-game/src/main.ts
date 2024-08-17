@@ -14,6 +14,7 @@ import Select from 'primevue/select';
 import Message from 'primevue/message';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import ToggleSwitch from 'primevue/toggleswitch';
 
 import App from './App.vue'
 import router from './router'
@@ -30,4 +31,5 @@ app
 .component('Message', Message)
 .component('DataTable', DataTable)
 .component('Column', Column)
+.component('ToggleSwitch', ToggleSwitch)
 .mount('#app');

@@ -5,13 +5,14 @@ import router from '@/router';
 import coinCatchSound from '../assets/audio/chinazes.mp3';
 import coinMissSound from '../assets/audio/sauntres.mp3';
 
-export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, pointsToWin: IPoints) {
+export function useGameLogic(gridSize?: IGridSizes, pointsToLose?: IPoints, pointsToWin?: IPoints) {
 
     const playersStore = usePlayersStore();
     const gameSettingsStore = useGameSettingsStore();
     const coinCatchAudio = new Audio(coinCatchSound);
     const coinMissAudio = new Audio(coinMissSound);
     let intervalId: number | null = null;
+    let timerInterval: number | null = null;
     let isGameStarted = false;
 
     const MOVING_DIRECTIONS = {
@@ -45,11 +46,33 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
         return playerCoordinates.x === coinCoordinates.x && playerCoordinates.y === coinCoordinates.y;
     }
     const isGameLost = () : boolean => {
-        console.log(pointsToLose.number);
         return playersStore.points.coin === pointsToLose.number;
     }
     const isGameWon = (player : PlayerType) : boolean => {
         return playersStore.points[player] === pointsToWin.number;
+    }
+    const startTimer = () => {
+        timerInterval = setInterval(() => {
+            gameSettingsStore.updateGameTime('increment', 'seconds');
+            if (gameSettingsStore.gameDuration.seconds >= 60) {
+                gameSettingsStore.updateGameTime('reset', 'seconds');
+                gameSettingsStore.updateGameTime('increment', 'minutes');
+            }
+        }, 1000);
+        return timerInterval;
+    }
+    const resetTimer = () => {
+        gameSettingsStore.updateGameTime('reset', 'seconds');
+        gameSettingsStore.updateGameTime('reset', 'minutes');
+    }
+    const stopTimer = () => {
+        if (timerInterval !== null) {
+            clearInterval(timerInterval);
+        }
+    }
+    const playAudio = (audio: HTMLAudioElement) => {
+        audio.currentTime = 0;
+        audio.play();
     }
     const generateNewNumber = (number : number) : number => {
         return Math.floor(Math.random() * (number));
@@ -97,8 +120,9 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
         
         if (hasPlayerCaughtCoin(player)) {
             playersStore.incrementPoints(player);
-            coinCatchAudio.currentTime = 0;
-            coinCatchAudio.play();
+            if (gameSettingsStore.soundOn) {
+                playAudio(coinCatchAudio);
+            }
             checkGameState();
         }
     }
@@ -133,9 +157,11 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
 
     const checkGameState = () => {
         if (isGameWon('firstPlayer') || isGameWon('secondPlayer')) {
+            stopTimer();
             clearInterval(intervalId!);
             router.push({ path: 'win' });
         } else if (isGameLost()) {
+            stopTimer();
             clearInterval(intervalId!);
             isGameStarted = false;
             router.push({ path: 'lose' });
@@ -149,12 +175,15 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
         playersStore.points.firstPlayer = 0;
         playersStore.points.secondPlayer = 0;
         playersStore.points.coin = 0;
+        resetTimer();
+        startTimer();
 
         intervalId = window.setInterval(() => {
             if (!hasPlayerCaughtCoin('firstPlayer') && !hasPlayerCaughtCoin('secondPlayer')) {
                 playersStore.incrementPoints('coin');
-                coinMissAudio.currentTime = 0;
-                coinMissAudio.play();
+                if (gameSettingsStore.soundOn) {
+                    playAudio(coinMissAudio);
+                }
             }
             changeCoinPosition();
             checkGameState();
@@ -167,12 +196,15 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
         if (intervalId !== null) {
             clearInterval(intervalId);
         }
+        if (timerInterval !== null) {
+            stopTimer();
+        }
         window.removeEventListener('keydown', handleKeydown);
     })
 
     return {
         startGame,
         handleKeydown,
-        getEntityInCell
+        getEntityInCell,
     }
 }

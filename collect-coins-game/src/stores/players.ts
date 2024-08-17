@@ -20,10 +20,16 @@ export interface Imgages {
     secondPlayer: string
     coin: string
 }
+export interface ILabels {
+    firstPlayer: string
+    secondPlayer: string
+    coin: string
+}
 
 export interface IPlayersState {
     points: IPlayersPoints
     coordinates: ICoordinates
+    labels: ILabels
     images: Imgages
 }
 
@@ -48,6 +54,11 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
                 y: 1
             }
         },
+        labels: {
+            firstPlayer: 'Player 1',
+            secondPlayer: 'Player 2',
+            coin: 'Coin'
+        },
         images: {
             firstPlayer: 'https://img.icons8.com/?size=100&id=54270&format=png&color=000000',
             secondPlayer: 'https://img.icons8.com/?size=100&id=rLMvblwPB6NZ&format=png&color=000000',
@@ -60,6 +71,13 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
         },
         getPlayerCoordinates: (state) => (player : 'firstPlayer' | 'secondPlayer' | 'coin') : IPlayerCoordinates => {
             return {...state.coordinates[player]};
+        },
+        getWinner: (state): { [key in string]: number } => {
+            const winner = Object.keys(state.points).reduce((a, b) => 
+                state.points[a as keyof typeof state.points] > state.points[b as keyof typeof state.points] ? a : b
+            ) as keyof typeof state.points;
+        
+            return { [state.labels[winner]]: state.points[winner] };
         }
     },
     actions: {

@@ -23,7 +23,7 @@ const app = createApp(App);
 app
 .use(createPinia())
 .use(router)
-.use(PrimeVue, {theme: {preset: Aura, options: {prefix: 'p', darkModeSelector: 'system', cssLayer: false}}})
+.use(PrimeVue, {theme: {preset: Aura}})
 .component('Toolbar', Toolbar)
 .component('Select', Select)
 .component('Avatar', Avatar)

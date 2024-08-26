@@ -3,7 +3,7 @@
         <div 
             v-for="entity in entities" 
             :key="entity.label" 
-            class="flex align-items-center gap-2"
+            class="flex align-items-center gap-2 font-medium"
         >
             <label :for="entity.label">{{ entity.label }}</label>
             <Avatar 

@@ -1,16 +1,16 @@
 <template>
     <div class="flex align-items-center justify-content-evenly mt-2">
-        <div class="card w-9rem md:w-56">
+        <div class="card w-10rem md:w-56">
             <label for="dd-points" class="block w-full mb-1">Grid size</label>
-            <Select v-model="localSelectedGridSize" @change="emitGridSizeChange" inputId="dd-points" :options="gameSettingsStore.gridSizes" optionLabel="size" class="w-full" />
+            <Select v-model="localSelectedGridSize" :disabled="gameSettingsStore.isGameStarted" @change="emitGridSizeChange" inputId="dd-gridSize" :options="gameSettingsStore.gridSizes" optionLabel="size" class="w-full" />
         </div>
-        <div class="card w-9rem md:w-56">
+        <div class="card w-10rem md:w-56">
             <label for="dd-points" class="block w-full mb-1">Select points to win</label>
-            <Select v-model="localSelectedPointsToWin" @change="emitPointsToWinChange" inputId="dd-points" :options="gameSettingsStore.pointsToWin" optionLabel="number" class="w-full" />
+            <Select v-model="localSelectedPointsToWin" :disabled="gameSettingsStore.isGameStarted" @change="emitPointsToWinChange" inputId="dd-pointsToWin" :options="gameSettingsStore.pointsToWin" optionLabel="number" class="w-full" />
         </div>
-        <div class="card w-9rem md:w-56">
-            <label for="dd-points" class="block w-full mb-1">Select points to loose</label>
-            <Select v-model="localSelectedPointsToLose" @change="emitPointsToLoseChange" inputId="dd-points" :options="gameSettingsStore.pointsToLose" optionLabel="number" class="w-full" />
+        <div class="card w-10rem md:w-56">
+            <label for="dd-points" class="block w-full mb-1">Select points to lose</label>
+            <Select v-model="localSelectedPointsToLose" :disabled="gameSettingsStore.isGameStarted" @change="emitPointsToLoseChange" inputId="dd-pointsToLose" :options="gameSettingsStore.pointsToLose" optionLabel="number" class="w-full" />
         </div>
         <div>
             <label for="switch1" class="block w-full mb-1">Sound On</label>

@@ -26,7 +26,8 @@ interface GameSettingsState {
     pointsToLose: IPoints[],
     coinJumpInterval: number,
     soundOn: boolean,
-    gameDuration: ITime
+    gameDuration: ITime,
+    isGameStarted: boolean
 }
 
 export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState>({
@@ -56,7 +57,8 @@ export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState
         gameDuration: {
             minutes: 0,
             seconds: 0
-        }
+        },
+        isGameStarted: false
     }),
     actions: {
         updateGameTime(action : 'increment' | 'reset', param: 'minutes' | 'seconds') {
@@ -68,6 +70,9 @@ export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState
         },
         toggleSound(value : boolean) {
             this.soundOn = value;
+        },
+        changeGameStatus(value: boolean) {
+            this.isGameStarted = value;
         }
     }
 })

@@ -13,7 +13,6 @@ export function useGameLogic(gridSize?: IGridSizes, pointsToLose?: IPoints, poin
     const coinMissAudio = new Audio(coinMissSound);
     let intervalId: number | null = null;
     let timerInterval: number | null = null;
-    let isGameStarted = false;
 
     const MOVING_DIRECTIONS = {
         UP: 'up',
@@ -159,19 +158,20 @@ export function useGameLogic(gridSize?: IGridSizes, pointsToLose?: IPoints, poin
         if (isGameWon('firstPlayer') || isGameWon('secondPlayer')) {
             stopTimer();
             clearInterval(intervalId!);
+            gameSettingsStore.changeGameStatus(false);
             router.push({ path: 'win' });
         } else if (isGameLost()) {
             stopTimer();
             clearInterval(intervalId!);
-            isGameStarted = false;
+            gameSettingsStore.changeGameStatus(false);
             router.push({ path: 'lose' });
         }
     };
 
     const startGame = () => {
-        if (isGameStarted) throw new Error('The game is already started');
+        if (gameSettingsStore.isGameStarted) throw new Error('The game is already started');
 
-        isGameStarted = true;
+        gameSettingsStore.changeGameStatus(true);
         playersStore.points.firstPlayer = 0;
         playersStore.points.secondPlayer = 0;
         playersStore.points.coin = 0;
@@ -205,6 +205,6 @@ export function useGameLogic(gridSize?: IGridSizes, pointsToLose?: IPoints, poin
     return {
         startGame,
         handleKeydown,
-        getEntityInCell,
+        getEntityInCell
     }
 }

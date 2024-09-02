@@ -36,27 +36,20 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import router from '@/router';
-    import { useGameSettingsStore } from '@/stores/gameSettings';
     import { usePlayersStore } from '@/stores/players';
+    import { useFormattedTime } from '@/components/common/formatTime';
 
-    const gameSettingsStore = useGameSettingsStore();
     const playersStore = usePlayersStore();
+    const { formattedTime } = useFormattedTime();
 
     const playAgain = () => {
         router.push({path: '/'})
     }
-
     const winner = computed(() => Object.entries(playersStore.getWinner)[0]);
-
-    const formattedTime = computed(() => {
-        const paddedMinutes = String(gameSettingsStore.gameDuration.minutes).padStart(2, '0');
-        const paddedSeconds = String(gameSettingsStore.gameDuration.seconds).padStart(2, '0');
-        return `${paddedMinutes}:${paddedSeconds}`;
-    });
 </script>
 
 <style scoped>
-  .info-value {
-    color: #4CAF50;
-  }
+    .info-value {
+        color: #4CAF50;
+    }
 </style>

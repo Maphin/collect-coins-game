@@ -20,7 +20,7 @@ export interface ITime {
     seconds: number
 }
 
-interface GameSettingsState {
+export interface GameSettingsState {
     gridSizes: IGridSizes[],
     pointsToWin: IPoints[],
     pointsToLose: IPoints[],

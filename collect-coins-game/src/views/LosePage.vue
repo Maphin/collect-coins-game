@@ -36,69 +36,20 @@
 <script setup lang="ts">
 	import { computed } from 'vue';
 	import router from '@/router';
-	import { useGameSettingsStore } from '@/stores/gameSettings';
 	import { usePlayersStore } from '@/stores/players';
+	import { useFormattedTime } from '@/components/common/formatTime';
 
-	const gameSettingsStore = useGameSettingsStore();
 	const playersStore = usePlayersStore();
+	const { formattedTime } = useFormattedTime();
 
 	const playAgain = () => {
 		router.push({path: '/'})
 	}
-
 	const winner = computed(() => Object.entries(playersStore.getWinner)[0]);
-
-	const formattedTime = computed(() => {
-		const paddedMinutes = String(gameSettingsStore.gameDuration.minutes).padStart(2, '0');
-		const paddedSeconds = String(gameSettingsStore.gameDuration.seconds).padStart(2, '0');
-		return `${paddedMinutes}:${paddedSeconds}`;
-	});
 </script>
 
 <style scoped>
-	/* .center-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100vh;
-		background-color: rgba(0, 0, 0, 0.5);
+	.info-value {
+		color: #4CAF50;
 	}
-
-	.win-card {
-		background: white;
-		border-radius: 10px;
-		padding: 20px;
-		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-		text-align: center;
-	}
-
-.win-icon img {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-}
-
-.win-label {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.player-info {
-  margin-bottom: 20px;
-}
-
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
-}
-
-.info-label {
-  font-weight: bold;
-} */
-
-.info-value {
-  color: #4CAF50;
-}
 </style>

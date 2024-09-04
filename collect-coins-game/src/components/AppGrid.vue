@@ -1,5 +1,12 @@
 <template>
-    <Button @click="startGame" label="Start Game" severity="success" raised class="block mx-auto mt-4"></Button>
+    <Button 
+        @click="startGame"
+        :disabled="gameSettingsStore.isGameStarted" 
+        label="Start Game" 
+        severity="success" 
+        raised 
+        class="block mx-auto mt-4">
+    </Button>
 
     <div v-if="gridSize" class="flex align-items-center justify-content-center">
         <table class="grid my-4 mx-2">
@@ -24,6 +31,7 @@
 <script setup lang="ts">
     import { onBeforeUnmount, watch } from 'vue';
     import { useGameLogic } from '../services/gameLogic';
+    import { useGameSettingsStore } from '../stores/gameSettings';
     import { type IGridSizes, type IPoints } from '../stores/gameSettings'
 
     const props = defineProps<{
@@ -32,11 +40,12 @@
         pointsToWin: IPoints;
     }>()
 
+    const gameSettingsStore = useGameSettingsStore();
     let { startGame, handleKeydown, getEntityInCell } = useGameLogic(props.gridSize, props.pointsToLose, props.pointsToWin);
 
     watch(() => [props.gridSize, props.pointsToLose, props.pointsToWin],
         ([newGridSize, newPointsToLose, newPointsToWin]) => {
-            ({ startGame, handleKeydown, getEntityInCell } = useGameLogic(newGridSize, newPointsToLose, newPointsToWin));
+            ({ startGame, handleKeydown, getEntityInCell } = useGameLogic(newGridSize as IGridSizes, newPointsToLose as IPoints, newPointsToWin as IPoints));
         }, { deep: true }
     );
 

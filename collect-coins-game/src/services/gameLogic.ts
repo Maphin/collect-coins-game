@@ -5,7 +5,7 @@ import router from '@/router';
 import coinCatchSound from '../assets/audio/chinazes.mp3';
 import coinMissSound from '../assets/audio/sauntres.mp3';
 
-export function useGameLogic(gridSize?: IGridSizes, pointsToLose?: IPoints, pointsToWin?: IPoints) {
+export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, pointsToWin: IPoints) {
 
     const playersStore = usePlayersStore();
     const gameSettingsStore = useGameSettingsStore();
@@ -172,9 +172,7 @@ export function useGameLogic(gridSize?: IGridSizes, pointsToLose?: IPoints, poin
         if (gameSettingsStore.isGameStarted) throw new Error('The game is already started');
 
         gameSettingsStore.changeGameStatus(true);
-        playersStore.points.firstPlayer = 0;
-        playersStore.points.secondPlayer = 0;
-        playersStore.points.coin = 0;
+        playersStore.resetPoints();
         resetTimer();
         startTimer();
 

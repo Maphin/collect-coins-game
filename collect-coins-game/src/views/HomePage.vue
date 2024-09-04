@@ -20,7 +20,6 @@
     import AppScoreBar from '../components/AppScoreBar.vue';
     import AppGrid from '../components/AppGrid.vue';
     import { useGameSettingsStore } from '../stores/gameSettings';
-    import { usePlayersStore } from '@/stores/players';
     import type { IGridSizes, IPoints } from '@/stores/gameSettings';
 
     const gameSettingsStore = useGameSettingsStore();

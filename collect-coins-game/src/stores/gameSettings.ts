@@ -1,13 +1,10 @@
 import { defineStore } from "pinia";
 
-interface ISelectedGridSize {
+export interface IGridSizes {
     rowsCount: number
     columnsCount: number
-}
-
-export interface IGridSizes extends ISelectedGridSize {
-    size: 'string'
-    code: 'string'
+    size: string
+    code: string
 }
 
 export interface IPoints {
@@ -30,8 +27,12 @@ export interface GameSettingsState {
     isGameStarted: boolean
 }
 
-export const useGameSettingsStore = defineStore<'gameSettings',GameSettingsState>({
-    id: 'gameSettings',
+export const useGameSettingsStore = defineStore<'gameSettings', GameSettingsState, {}, {
+    updateGameTime: (action : 'increment' | 'reset', param: 'minutes' | 'seconds') => void;
+    toggleSound: (value : boolean) => void;
+    changeGameStatus: (value: boolean) => void;
+}>
+    ('gameSettings', {
     state: () => ({
         gridSizes: [
             { size: '4x4', rowsCount: 4, columnsCount: 4, code: '1' },

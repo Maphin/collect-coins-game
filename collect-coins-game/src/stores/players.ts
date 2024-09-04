@@ -33,7 +33,16 @@ export interface IPlayersState {
     images: Imgages
 }
 
-export const usePlayersStore = defineStore<'players', IPlayersState>('players', {
+export const usePlayersStore = defineStore<'players', IPlayersState, {
+    getPlayerPoints: (state: IPlayersState) => (player: 'firstPlayer' | 'secondPlayer' | 'coin') => number;
+    getPlayerCoordinates: (state: IPlayersState) => (player: 'firstPlayer' | 'secondPlayer' | 'coin') => IPlayerCoordinates;
+    getWinner: (state: IPlayersState) => { [key in string]: number };
+}, {
+    incrementPoints: (entity: 'firstPlayer' | 'secondPlayer' | 'coin') => void;
+    resetPoints: () => void;
+    updateCoordinates: (entity: 'firstPlayer' | 'secondPlayer' | 'coin', newX: number, newY: number) => void;
+}>
+    ('players', {
     state: (): IPlayersState => ({
         points: {
             firstPlayer: 0,
@@ -87,6 +96,7 @@ export const usePlayersStore = defineStore<'players', IPlayersState>('players', 
         resetPoints() {
             this.points.firstPlayer = 0;
             this.points.secondPlayer = 0;
+            this.points.coin = 0;
         },
         updateCoordinates(entity : 'firstPlayer' | 'secondPlayer' | 'coin', newX : number, newY : number) {
             this.coordinates[entity].x = newX;

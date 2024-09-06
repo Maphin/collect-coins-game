@@ -35,16 +35,13 @@
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import router from '@/router';
     import { usePlayersStore } from '@/stores/players';
     import { useFormattedTime } from '@/components/common/formatTime';
+    import { playAgain } from '../services/gameLogic';
 
     const playersStore = usePlayersStore();
     const { formattedTime } = useFormattedTime();
 
-    const playAgain = () => {
-        router.push({path: '/'})
-    }
     const winner = computed(() => Object.entries(playersStore.getWinner)[0]);
 </script>
 

@@ -19,17 +19,18 @@
     import AppSettings from '../components/AppSettings.vue';
     import AppScoreBar from '../components/AppScoreBar.vue';
     import AppGrid from '../components/AppGrid.vue';
-    import { useGameSettingsStore } from '../stores/gameSettings';
-    import type { IGridSizes, IPoints } from '@/stores/gameSettings';
+    import { useGameSettingsStore, type IGridSizes, type IPoints} from '../stores/gameSettings';
+    import { setPlayersStartCoordinates } from '../services/gameLogic';
 
     const gameSettingsStore = useGameSettingsStore();
-
+ 
     const selectedGridSize = ref(gameSettingsStore.gridSizes[0]);
     const selectedPointsToWin = ref(gameSettingsStore.pointsToWin[0]);
     const selectedPointsToLose = ref(gameSettingsStore.pointsToLose[0]);
 
     const updateGridSize = (newSize : IGridSizes) => {
         selectedGridSize.value = {...newSize};
+        setPlayersStartCoordinates(newSize);
     }
     const updatePointsToWin = (newPoints : IPoints) => {
         selectedPointsToWin.value = {...newPoints};

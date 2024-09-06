@@ -5,10 +5,11 @@ import router from '@/router';
 import coinCatchSound from '../assets/audio/chinazes.mp3';
 import coinMissSound from '../assets/audio/sauntres.mp3';
 
+const playersStore = usePlayersStore();
+const gameSettingsStore = useGameSettingsStore();
+
 export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, pointsToWin: IPoints) {
 
-    const playersStore = usePlayersStore();
-    const gameSettingsStore = useGameSettingsStore();
     const coinCatchAudio = new Audio(coinCatchSound);
     const coinMissAudio = new Audio(coinMissSound);
     let intervalId: number | null = null;
@@ -82,7 +83,7 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
         if (isPlayerHere(playerPosition.x, playerPosition.y, player)) return false;
         return true;
     }
-    const changeCoinPosition = () => {
+    const changeCoinPosition = async () => {
         const newPosition : IPlayerCoordinates = {...playersStore.coordinates.coin};
         do {
             newPosition.x = generateNewNumber(gridSize.columnsCount);
@@ -90,7 +91,7 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
         } while (isPlayerHere(newPosition.x, newPosition.y, 'coin') || isPlayerHere(newPosition.x, newPosition.y, 'firstPlayer') || isPlayerHere(newPosition.x, newPosition.y, 'secondPlayer'));
         playersStore.updateCoordinates('coin', newPosition.x, newPosition.y);
     }
-    const movePlayer = (player : PlayerType, direction : string) => {
+    const movePlayer = async (player : PlayerType, direction : string) => {
         const newPosition : IPlayerCoordinates = {...playersStore.coordinates[player]};
 
         switch (direction) {
@@ -125,7 +126,7 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
             checkGameState();
         }
     }
-    const handleKeydown = (event: KeyboardEvent) => {
+    const handleKeydown = async (event: KeyboardEvent) => {
         switch (event.code) {
             case 'ArrowUp':
                 movePlayer('firstPlayer', MOVING_DIRECTIONS.UP);
@@ -152,7 +153,7 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
                 movePlayer('secondPlayer', MOVING_DIRECTIONS.RIGHT);
                 break;
         }
-    };
+    }
 
     const checkGameState = () => {
         if (isGameWon('firstPlayer') || isGameWon('secondPlayer')) {
@@ -166,9 +167,9 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
             gameSettingsStore.changeGameStatus(false);
             router.push({ path: 'lose' });
         }
-    };
+    }
 
-    const startGame = () => {
+    const startGame = async () => {
         if (gameSettingsStore.isGameStarted) throw new Error('The game is already started');
 
         gameSettingsStore.changeGameStatus(true);
@@ -203,6 +204,16 @@ export function useGameLogic(gridSize: IGridSizes, pointsToLose: IPoints, points
     return {
         startGame,
         handleKeydown,
-        getEntityInCell
+        getEntityInCell,
     }
+}
+
+export const playAgain = async () => {
+    router.push({path: '/'});
+    setPlayersStartCoordinates(gameSettingsStore.gridSizes[0]);
+}
+
+export function setPlayersStartCoordinates(gridSize : IGridSizes) {
+    playersStore.updateCoordinates('firstPlayer', 0, 0);
+    playersStore.updateCoordinates('secondPlayer', gridSize.columnsCount - 1, gridSize.rowsCount - 1);
 }

@@ -2,6 +2,10 @@
 
 This game has been created to let people compete in the speed of collecting coins!
 
+![image alt](https://github.com/Maphin/collect-coins-game/blob/main/collect-coins-game/images/main.png?raw=true)
+![image alt](https://github.com/Maphin/collect-coins-game/blob/main/collect-coins-game/images/playerWin.png?raw=true)
+![image alt](https://github.com/Maphin/collect-coins-game/blob/main/collect-coins-game/images/coinWin.png?raw=true)
+
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
